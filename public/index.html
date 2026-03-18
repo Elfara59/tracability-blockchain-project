@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Escrow DApp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="header-left">
+                <h1>Logistics Escrow</h1>
+                <p class="subtitle">Secure B2B SLA Smart Contract</p>
+            </div>
+            <div class="header-right">
+                <button id="connectWalletBtn" class="btn primary">Connect Wallet</button>
+                <div id="walletInfo" class="hidden">
+                    <span class="status-indicator online"></span>
+                    <span id="userAddress">0x...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main>
+            <!-- SECTION 1: CREATE ORDER (BUYER) -->
+            <section class="card" id="createOrderSection">
+                <h2>1. Create New Order <span class="badge">Buyer</span></h2>
+                <form id="createOrderForm">
+                    <div class="form-group">
+                        <label for="sellerInput">Seller Address (0x...)</label>
+                        <input type="text" id="sellerInput" placeholder="ex: 0x123..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="carrierInput">Carrier Address (0x...)</label>
+                        <input type="text" id="carrierInput" placeholder="ex: 0x456..." required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="priceInput">Order Price (ETH)</label>
+                            <input type="number" id="priceInput" step="0.001" min="0" placeholder="0.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="penaltyInput">Penalty / Hour (ETH)</label>
+                            <input type="number" id="penaltyInput" step="0.001" min="0" placeholder="0.05" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deadlineInput">SLA Deadline (Timestamp UNIX)</label>
+                        <input type="number" id="deadlineInput" required>
+                        <small>Current UNIX Timestamp approx: <span id="hintTimestamp">...</span> <button type="button"
+                                class="btn-text" id="btnPastTime">[-3 days]</button></small>
+                    </div>
+
+                    <button type="submit" class="btn submit" id="btnCreateOrder">Create & Lock Funds</button>
+                </form>
+            </section>
+
+            <!-- SECTION 2: ORDER MANAGEMENT -->
+            <section class="card" id="manageOrderSection">
+                <h2>2. Order Management</h2>
+
+                <div class="search-order">
+                    <input type="number" id="searchOrderId" placeholder="Order ID" value="1" min="1">
+                    <button id="btnFetchOrder" class="btn secondary">Fetch Details</button>
+                </div>
+
+                <div id="orderDetails" class="order-details hidden">
+                    <div class="detail-header">
+                        <h3>Order #<span id="displayOrderId">?</span></h3>
+                        <span id="displayState" class="badge state-badge">LOADING...</span>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="detail-item"><strong>Buyer:</strong> <span id="displayBuyer">...</span></div>
+                        <div class="detail-item"><strong>Seller:</strong> <span id="displaySeller">...</span></div>
+                        <div class="detail-item"><strong>Carrier:</strong> <span id="displayCarrier">...</span></div>
+                        <div class="detail-item"><strong>Price:</strong> <span id="displayPrice">...</span> ETH</div>
+                        <div class="detail-item"><strong>Penalty:</strong> <span id="displayPenalty">...</span> ETH/h
+                        </div>
+                        <div class="detail-item"><strong>Deadline:</strong> <span id="displayDeadline">...</span></div>
+                    </div>
+
+                    <div class="actions-grid">
+                        <button id="btnShip" class="btn action-seller" disabled>Pack & Ship (Seller)</button>
+                        <button id="btnDeliver" class="btn action-carrier" disabled>Confirm Delivery (Carrier)</button>
+                        <button id="btnAccept" class="btn action-buyer" disabled>Accept Goods (Buyer)</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: WITHDRAWALS -->
+            <section class="card" id="withdrawSection">
+                <h2>3. Withdraw Funds <span class="badge">Seller/Buyer</span></h2>
+                <p>Withdraw your allocated funds from completed orders or SLA compensations.</p>
+                <div class="withdraw-container">
+                    <div class="balance-display">
+                        <span>Pending Balance:</span>
+                        <h2><span id="displayPendingWithdrawal">0.00</span> ETH</h2>
+                    </div>
+                    <button id="btnWithdraw" class="btn submit">Withdraw to Wallet</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- LOGS / NOTIFICATIONS -->
+        <div id="notificationArea" class="notification-area"></div>
+    </div>
+
+    <!-- Web3.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <!-- App Logic -->
+    <script src="main.js?v=2"></script>
+</body>
+
+</html>
