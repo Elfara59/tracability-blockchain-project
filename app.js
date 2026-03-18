@@ -8,7 +8,7 @@ const web3 = new Web3('http://127.0.0.1:7545');
 
 // 2. Définition de l'adresse de votre Smart Contract
 // REMPLACER ICI PAR L'ADRESSE DONNÉE PAR REMIX APRES LE DEPLOIEMENT:
-const contractAddress = '0xb61B991577e179a2A8239bdaa3C6B93DfD28D192';
+const contractAddress = '0x49Eb8A690E9af0cF3cB1cf32ca54cbB705AD7D48';
 
 // 3. Définition du fichier ABI permettant d'interagir avec le contrat.
 // Normalement on charge le fichier .json complet. 

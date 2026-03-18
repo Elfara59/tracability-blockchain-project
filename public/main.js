@@ -1,6 +1,6 @@
 // ==== 1. CONFIGURATION CONTRACT ====
 // Remplacez cette adresse par celle de votre contrat déployé sur Ganache
-const CONTRACT_ADDRESS = "0xb61B991577e179a2A8239bdaa3C6B93DfD28D192";
+const CONTRACT_ADDRESS = "0x49Eb8A690E9af0cF3cB1cf32ca54cbB705AD7D48";
 
 // L'ABI du contrat complet (Compilé depuis Remix/Solidity)
 const CONTRACT_ABI = [
@@ -283,7 +283,7 @@ const CONTRACT_ABI = [
 let web3;
 let contract;
 let userAccount;
-const STATE_LABELS = ['Created', 'Shipped', 'Delivered', 'Completed'];
+const STATE_LABELS = ['Créée', 'Envoyée', 'Livrée', 'Terminée'];
 const STATE_CLASSES = ['state-created', 'state-shipped', 'state-delivered', 'state-completed'];
 
 // ==== 3. ELEMENTS DOM ====
@@ -309,7 +309,7 @@ async function connectWallet() {
             walletInfo.classList.remove('hidden');
             userAddressSpan.innerText = userAccount.substring(0, 6) + '...' + userAccount.substring(userAccount.length - 4);
 
-            showToast('Wallet connected successfully!', 'success');
+            showToast('Portefeuille connecté !', 'success');
 
             // Ecouter les changements de compte sur MetaMask
             window.ethereum.on('accountsChanged', (newAccounts) => {
@@ -323,10 +323,10 @@ async function connectWallet() {
 
         } catch (error) {
             console.error(error);
-            showToast('User denied connection or error occurred.', 'error');
+            showToast('Connexion refusée ou erreur.', 'error');
         }
     } else {
-        showToast('Please install MetaMask to use this DApp!', 'error');
+        showToast('Veuillez installer MetaMask !', 'error');
     }
 }
 
@@ -353,7 +353,7 @@ function showToast(message, type = 'success') {
 // [ACHETEUR] Créer une commande
 document.getElementById('createOrderForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!contract) return showToast('Please connect wallet first', 'error');
+    if (!contract) return showToast('Veuillez connecter votre portefeuille', 'error');
 
     const seller = document.getElementById('sellerInput').value;
     const carrier = document.getElementById('carrierInput').value;
@@ -366,14 +366,14 @@ document.getElementById('createOrderForm').addEventListener('submit', async (e) 
     try {
         const btn = document.getElementById('btnCreateOrder');
         btn.disabled = true;
-        btn.innerText = "Transaction pending...";
+        btn.innerText = "Transaction en cours...";
 
         await contract.methods.createOrder(seller, carrier, deadline, penaltyWei).send({
             from: userAccount,
             value: priceWei // L'argent bloqué pour le contrat !
         });
 
-        showToast('Order created & funds locked!', 'success');
+        showToast('Commande créée & fonds bloqués !', 'success');
         document.getElementById('searchOrderId').value = await contract.methods.orderCount().call();
         fetchOrder(); // Actualiser
 
@@ -382,13 +382,13 @@ document.getElementById('createOrderForm').addEventListener('submit', async (e) 
     } finally {
         const btn = document.getElementById('btnCreateOrder');
         btn.disabled = false;
-        btn.innerText = "Create & Lock Funds";
+        btn.innerText = "Acheter & Bloquer les fonds";
     }
 });
 
 // Récupérer et afficher les détails d'une commande
 async function fetchOrder() {
-    if (!contract) return showToast('Please connect wallet first', 'error');
+    if (!contract) return showToast('Veuillez connecter votre portefeuille', 'error');
 
     const orderId = document.getElementById('searchOrderId').value;
     if (!orderId) return;
@@ -398,7 +398,7 @@ async function fetchOrder() {
         const orderCountInt = parseInt(BigInt(orderCountStr).toString());
 
         if (orderId > orderCountInt) {
-            return showToast('This order does not exist yet', 'error');
+            return showToast('Cette commande n\'existe pas encore', 'error');
         }
 
         const order = await contract.methods.orders(orderId).call();
@@ -431,7 +431,7 @@ async function fetchOrder() {
         btnAccept.disabled = stateInt !== 2; // Seul etat: "Delivered"
 
     } catch (error) {
-        showToast('Error fetching order', 'error');
+        showToast('Erreur lors de la récupération', 'error');
         console.error(error);
     }
 }
@@ -445,7 +445,7 @@ async function contractAction(methodName, btnId, successMsg) {
     try {
         btn.disabled = true;
         const originalText = btn.innerText;
-        btn.innerText = "Loading...";
+        btn.innerText = "Chargement...";
 
         await contract.methods[methodName](orderId).send({ from: userAccount });
         showToast(successMsg, 'success');
@@ -479,20 +479,31 @@ async function withdrawFunds() {
     const btn = document.getElementById('btnWithdraw');
     try {
         btn.disabled = true;
-        btn.innerText = "Withdrawing...";
+        btn.innerText = "Retrait en cours...";
 
         await contract.methods.withdraw().send({ from: userAccount });
 
-        showToast('Funds successfully transferred to your wallet!', 'success');
+        showToast('Fonds transférés avec succès !', 'success');
         updatePendingWithdrawals();
 
     } catch (error) {
         showToast(error.message, 'error');
     } finally {
-        btn.innerText = "Withdraw to Wallet";
+        btn.innerText = "Transférer vers mon compte";
         updatePendingWithdrawals(); // Va disabled ou pas le bouton
     }
 }
+
+// Bindings
+connectWalletBtn.addEventListener('click', connectWallet);
+document.getElementById('btnFetchOrder').addEventListener('click', fetchOrder);
+document.getElementById('searchOrderId').addEventListener('change', fetchOrder);
+
+document.getElementById('btnShip').addEventListener('click', () => contractAction('shipOrder', 'btnShip', 'Colis envoyé !'));
+document.getElementById('btnDeliver').addEventListener('click', () => contractAction('confirmDelivery', 'btnDeliver', 'Livraison confirmée !'));
+document.getElementById('btnAccept').addEventListener('click', () => contractAction('acceptOrder', 'btnAccept', 'Réception confirmée ! Les fonds sont disponibles.'));
+document.getElementById('btnWithdraw').addEventListener('click', withdrawFunds);
+
 
 // Bindings
 connectWalletBtn.addEventListener('click', connectWallet);
