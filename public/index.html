@@ -4,9 +4,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logistics Escrow DApp</title>
+    <title>Logistics Escrow - Portail</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .portal-container {
+            max-width: 800px;
+            margin: 4rem auto;
+            text-align: center;
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .portal-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .portal-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .portal-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .portal-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+    </style>
 </head>
 
 <body>
@@ -14,10 +64,9 @@
     <header>
         <div class="container">
             <div class="header-left">
-                <h1>vinted <span style="font-size: 0.8rem; color: #666; font-weight: 400; text-transform: none;">Logistics Escrow</span></h1>
-            </div>
-            <div class="header-search" style="flex: 1; margin: 0 2rem; max-width: 600px;">
-                <input type="text" placeholder="Rechercher des articles" style="background: #f2f2f2; border: none; padding: 0.6rem 1rem; width: 100%;">
+                <h1>vinted <span
+                        style="font-size: 0.8rem; color: #666; font-weight: 400; text-transform: none;">Logistics
+                        Escrow</span></h1>
             </div>
             <div class="header-right">
                 <button id="connectWalletBtn" class="btn primary">Connect Wallet</button>
@@ -25,155 +74,43 @@
                     <span class="status-indicator online"></span>
                     <span id="userAddress">0x...</span>
                 </div>
-                <button class="btn primary">Vendre maintenant</button>
             </div>
         </div>
     </header>
 
-    <!-- HERO SECTION -->
-    <div class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h2>Prêts à faire du tri dans vos placards ?</h2>
-                <button class="btn primary">Vendre maintenant</button>
-                <p style="margin-top: 1rem; font-size: 0.9rem; color: #09B1BA; cursor: pointer; text-decoration: underline;">Découvrir comment ça marche</p>
-            </div>
+    <div class="portal-container">
+        <h2 style="font-size: 2.5rem; font-weight: 700; color: #111;">Bienvenue sur le réseau de paiement Sécurisé</h2>
+        <p style="color: #666; font-size: 1.1rem; margin-top: 1rem;">Choisissez votre rôle pour accéder à votre
+            interface dédiée connectée au Smart Contract.</p>
+
+        <div class="portal-grid">
+            <a href="acheteur.html" class="portal-card">
+                <div class="portal-icon">🛍️</div>
+                <h3>Espace Acheteur</h3>
+                <p>Découvrez les annonces, achetez en toute sécurité et validez vos réceptions.</p>
+            </a>
+
+            <a href="vendeur.html" class="portal-card">
+                <div class="portal-icon">📦</div>
+                <h3>Espace Vendeur</h3>
+                <p>Mettez en vente vos articles, gérez vos expéditions et récupérez vos fonds.</p>
+            </a>
+
+            <a href="transporteur.html" class="portal-card">
+                <div class="portal-icon">🚚</div>
+                <h3>Espace Transporteur</h3>
+                <p>Scannez et livrez les commandes. (Respectez la SLA pour votre prime !)</p>
+            </a>
         </div>
-    </div>
-
-    <div class="container">
-        <!-- MARKETPLACE GRID (MOCK) -->
-        <section>
-            <h2 style="font-weight: 700;">Articles populaires</h2>
-            <div class="grid">
-                <div class="item-card">
-                    <div class="item-image" style="background-image: url('https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=300&q=80')"></div>
-                    <div class="item-price">15,00 €</div>
-                    <div class="item-info">T-shirt Nike • M</div>
-                    <div class="item-info">★ ★ ★ ★ ★ 12</div>
-                </div>
-                <div class="item-card">
-                    <div class="item-image" style="background-image: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=300&q=80')"></div>
-                    <div class="item-price">45,00 €</div>
-                    <div class="item-info">Sneakers Adidas • 42</div>
-                    <div class="item-info">★ ★ ★ ★ ★ 8</div>
-                </div>
-                <div class="item-card">
-                    <div class="item-image" style="background-image: url('https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=300&q=80')"></div>
-                    <div class="item-price">30,00 €</div>
-                    <div class="item-info">Veste en jean • S</div>
-                    <div class="item-info">★ ★ ★ ★ ★ 5</div>
-                </div>
-                <div class="item-card">
-                    <div class="item-image" style="background-image: url('https://images.unsplash.com/photo-1551028150-64b9f398f678?auto=format&fit=crop&w=300&q=80')"></div>
-                    <div class="item-price">120,00 €</div>
-                    <div class="item-info">Blouson Cuir • L</div>
-                    <div class="item-info">★ ★ ★ ★ ★ 2</div>
-                </div>
-                <div class="item-card">
-                    <div class="item-image" style="background-image: url('https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=300&q=80')"></div>
-                    <div class="item-price">12,00 €</div>
-                    <div class="item-info">T-shirt Coton • XL</div>
-                    <div class="item-info">★ ★ ★ ★ ★ 1</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- MAIN CONTENT -->
-        <main>
-            <!-- SECTION 1: CREATE ORDER (BUYER) -->
-            <section class="card" id="createOrderSection">
-                <h2 style="font-weight: 700;">Acheter un article <span class="badge">Acheteur</span></h2>
-                <p style="margin-bottom: 1.5rem; color: #666;">Simulez un achat en créant une nouvelle commande sécurisée.</p>
-                <form id="createOrderForm">
-                    <div class="form-group">
-                        <label for="sellerInput">Adresse du Vendeur</label>
-                        <input type="text" id="sellerInput" placeholder="ex: 0x123..." required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="carrierInput">Adresse du Transporteur (Relais Colis)</label>
-                        <input type="text" id="carrierInput" placeholder="ex: 0x456..." required>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group" style="flex: 2;">
-                            <label for="priceInput">Prix de l'article (ETH)</label>
-                            <input type="number" id="priceInput" step="0.001" min="0" placeholder="0.5" required>
-                        </div>
-                        <div class="form-group" style="flex: 1;">
-                            <label for="penaltyInput">Pénalité de retard / h</label>
-                            <input type="number" id="penaltyInput" step="0.001" min="0" placeholder="0.05" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="deadlineInput">Date limite de livraison (Timestamp UNIX)</label>
-                        <input type="number" id="deadlineInput" required>
-                        <small>Timestamp actuel: <span id="hintTimestamp">...</span> <button type="button"
-                                class="btn-text" id="btnPastTime" style="color: #09B1BA;">[Forcer retard -3 jours]</button></small>
-                    </div>
-
-                    <button type="submit" class="btn primary submit" id="btnCreateOrder">Acheter & Bloquer les fonds</button>
-                </form>
-            </section>
-
-            <!-- SECTION 2: ORDER MANAGEMENT -->
-            <section class="card" id="manageOrderSection">
-                <h2 style="font-weight: 700;">Suivi de commande</h2>
-                <p style="margin-bottom: 1.5rem; color: #666;">Gérez vos ventes, expéditions et réceptions.</p>
-
-                <div class="search-order">
-                    <input type="number" id="searchOrderId" placeholder="N° de commande" value="1" min="1" style="flex: 1;">
-                    <button id="btnFetchOrder" class="btn secondary">Actualiser</button>
-                </div>
-
-                <div id="orderDetails" class="order-details hidden">
-                    <div class="detail-header">
-                        <h3 style="font-size: 1.2rem;">Commande #<span id="displayOrderId">?</span></h3>
-                        <span id="displayState" class="badge state-badge">CHARGEMENT...</span>
-                    </div>
-
-                    <div class="detail-grid">
-                        <div class="detail-item"><strong>Acheteur</strong> <span id="displayBuyer">...</span></div>
-                        <div class="detail-item"><strong>Vendeur</strong> <span id="displaySeller">...</span></div>
-                        <div class="detail-item"><strong>Transporteur</strong> <span id="displayCarrier">...</span></div>
-                        <div class="detail-item"><strong>Prix</strong> <span id="displayPrice">...</span> ETH</div>
-                        <div class="detail-item"><strong>Pénalité</strong> <span id="displayPenalty">...</span> ETH/h
-                        </div>
-                        <div class="detail-item"><strong>Date limite</strong> <span id="displayDeadline">...</span></div>
-                    </div>
-
-                    <div class="actions-grid" style="margin-top: 2rem; display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button id="btnShip" class="btn primary" disabled>Envoyer le colis (Vendeur)</button>
-                        <button id="btnDeliver" class="btn primary" disabled>Confirmer la livraison (Livreur)</button>
-                        <button id="btnAccept" class="btn primary" disabled>Confirmer la réception (Acheteur)</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SECTION 3: WITHDRAWALS -->
-            <section class="card" id="withdrawSection">
-                <h2 style="font-weight: 700;">Mon Porte-monnaie</h2>
-                <p style="margin-bottom: 1.5rem; color: #666;">Récupérez l'argent de vos ventes terminées ou vos remboursements.</p>
-                <div class="withdraw-container">
-                    <div class="balance-display">
-                        <span style="font-size: 0.9rem; color: #666;">Solde disponible :</span>
-                        <h2><span id="displayPendingWithdrawal">0.00</span> ETH</h2>
-                    </div>
-                    <button id="btnWithdraw" class="btn primary">Transférer vers mon compte</button>
-                </div>
-            </section>
-        </main>
-
-        <!-- LOGS / NOTIFICATIONS -->
-        <div id="notificationArea" class="notification-area"></div>
     </div>
 
     <!-- Web3.js from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <!-- App Logic -->
-    <script src="main.js?v=2"></script>
+    <script src="shared.js"></script>
+    <script>
+        // Init web3 lightly for the index if user wants to see their wallet
+        initWeb3(false);
+    </script>
 </body>
 
 </html>

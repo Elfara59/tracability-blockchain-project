@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Vendeur - Logistics Escrow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .split-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <div class="header-left">
+                <h1>vinted <span style="font-size: 0.8rem; color: #666; font-weight: 400; text-transform: none;">Espace
+                        Vendeur</span></h1>
+            </div>
+            <div class="header-search">
+                <a href="index.html" style="color: var(--primary); text-decoration: none; font-weight: 500;">← Retour au
+                    portail</a>
+            </div>
+            <div class="header-right">
+                <button id="connectWalletBtn" class="btn primary">Connect Wallet</button>
+                <div id="walletInfo" class="hidden">
+                    <span class="status-indicator online"></span>
+                    <span id="userAddress">0x...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero"
+        style="height: 200px; background-image: url('https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=1200&q=80');">
+        <div class="container">
+            <div class="hero-content" style="max-width: 100%;">
+                <h2>Votre Espace Vendeur</h2>
+                <p>Mettez en vente, gérez l'expédition de vos commandes et récupérez vos fonds.</p>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <!-- SECTION 3: WITHDRAWALS (Always good to have it at the top for sellers) -->
+        <section class="card" id="withdrawSection" style="margin-bottom: 2rem; border-color: var(--primary);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h2 style="font-weight: 700; margin-bottom: 0.5rem;">Mon Porte-monnaie</h2>
+                    <p style="color: #666; font-size: 0.9rem;">Fonds Blockchain débloqués prêts au virement.</p>
+                </div>
+                <div class="withdraw-container"
+                    style="padding: 0; background: transparent; border: none; align-items: flex-end; gap: 2rem;">
+                    <div class="balance-display">
+                        <h2><span id="displayPendingWithdrawal">0.00</span> <span
+                                style="font-size:1.2rem; color: #666;">ETH</span></h2>
+                    </div>
+                    <button id="btnWithdraw" class="btn primary">Transférer vers mon compte</button>
+                </div>
+            </div>
+        </section>
+
+        <div class="split-layout">
+            <!-- LEFT COLUMN: Create Listing -->
+            <aside>
+                <section class="card">
+                    <h2 style="font-weight: 700; font-size: 1.2rem;">Nouvelle Annonce</h2>
+                    <p style="margin-bottom: 1.5rem; color: #666; font-size: 0.85rem;">Mettez vos articles en vitrine
+                        pour les Acheteurs.</p>
+                    <form id="createListingForm">
+                        <div class="form-group">
+                            <label for="itemTitle">Titre de l'article</label>
+                            <input type="text" id="itemTitle" placeholder="ex: Veste en Jean" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="itemPhoto">URL de la photo</label>
+                            <input type="url" id="itemPhoto" placeholder="https://..."
+                                value="https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=300&q=80"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="itemPrice">Prix (ETH)</label>
+                            <input type="number" id="itemPrice" step="0.001" min="0" placeholder="0.5" required>
+                        </div>
+
+                        <div class="form-group" style="padding-top: 1rem; border-top: 1px dashed #ccc;">
+                            <label for="itemCarrier">Adresse du Transporteur Associé</label>
+                            <input type="text" id="itemCarrier" placeholder="0x..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="itemPenalty">Pénalité de retard par Heure (ETH)</label>
+                            <input type="number" id="itemPenalty" step="0.0001" min="0" placeholder="0.01" required>
+                        </div>
+
+                        <button type="submit" class="btn primary submit">Mettre en vitrine</button>
+                    </form>
+                </section>
+
+                <section class="card" style="margin-top: 2rem;">
+                    <h2 style="font-weight: 700; font-size: 1.2rem;">Annonces en ligne</h2>
+                    <p style="margin-bottom: 1.5rem; color: #666; font-size: 0.85rem;">Ces articles sont visibles par
+                        les acheteurs dans le catalogue.</p>
+                    <div id="myListingsContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <p style="color: #999; font-size:0.85rem; text-align:center;">Vérification de la base de
+                            données...</p>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- RIGHT COLUMN: Manage Orders -->
+            <div class="main-column">
+                <section class="card">
+                    <h2 style="font-weight: 700;">Mes ventes à expédier (<span id="salesCount">0</span>) </h2>
+                    <p style="margin-bottom: 1.5rem; color: #666; font-size: 0.85rem;">Une fois qu'un acheteur paie, sa
+                        commande apparaît ici. Vous devez déposer le colis au relais.</p>
+
+                    <div id="ordersList" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <p style="color: #999; text-align: center; padding: 2rem;">Chargement des contrats...</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Web3.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="shared.js"></script>
+    <script src="vendeur.js"></script>
+</body>
+
+</html>

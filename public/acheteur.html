@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Acheteur - Logistics Escrow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <div class="header-left">
+                <h1>vinted <span style="font-size: 0.8rem; color: #666; font-weight: 400; text-transform: none;">Espace
+                        Acheteur</span></h1>
+            </div>
+            <div class="header-search">
+                <a href="index.html" style="color: var(--primary); text-decoration: none; font-weight: 500;">← Retour au
+                    portail</a>
+            </div>
+            <div class="header-right">
+                <button id="connectWalletBtn" class="btn primary">Connect Wallet</button>
+                <div id="walletInfo" class="hidden">
+                    <span class="status-indicator online"></span>
+                    <span id="userAddress">0x...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Prêts à faire de bonnes affaires ?</h2>
+                <p>Vos achats sont protégés par Smart Contract. L'argent n'est débloqué qu'à la bonne réception !</p>
+                <a href="#marketplace" class="btn primary"
+                    style="display:inline-block; margin-top:1rem; text-decoration:none;">Voir toutes les annonces</a>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+
+        <!-- SECTION 1: MARKETPLACE -->
+        <section id="marketplace">
+            <h2 style="font-weight: 700;">Les nouveautés</h2>
+            <div class="grid" id="marketplaceGrid">
+                <p style="color: #999; margin-bottom: 3rem;">Chargement du catalogue...</p>
+                <!-- Items injectés par JS ici -->
+            </div>
+        </section>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 3rem 0;">
+
+        <!-- SECTION 2: My Orders (Buyer) -->
+        <section id="myOrdersSection">
+            <h2 style="font-weight: 700;">Mes achats en cours (<span id="ordersCount">0</span>)</h2>
+            <p style="margin-bottom: 2rem; color: #666;">Suivez l'expédition et validez la réception quand c'est arrivé
+                !</p>
+
+            <div id="buyerOrdersList" style="display: flex; flex-direction: column; gap: 1rem;">
+                <p style="color: #999; text-align: center; padding: 2rem;">Vérification de la blockchain...</p>
+            </div>
+        </section>
+
+        <!-- ACHAT MODAL (Caché par defaut) -->
+        <div id="buyModal"
+            style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+            <div class="card" style="width: 100%; max-width: 500px; margin: 2rem; max-height: 90vh; overflow-y: auto;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+                    <h2 style="margin:0; font-size: 1.25rem;">Confirmer l'achat</h2>
+                    <button onclick="document.getElementById('buyModal').style.display='none'"
+                        style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                </div>
+
+                <div style="background:#f5f6f7; padding: 1rem; border-radius:4px; margin-bottom: 1.5rem;">
+                    <strong id="modalTitle">Article...</strong><br>
+                    <span id="modalPrice" style="color: var(--primary); font-weight:700; font-size:1.2rem;">0 ETH</span>
+                </div>
+
+                <form id="confirmBuyForm">
+                    <input type="hidden" id="modalSeller">
+                    <input type="hidden" id="modalCarrier">
+                    <input type="hidden" id="modalPenalty">
+                    <input type="hidden" id="modalPriceVal">
+
+                    <div class="form-group">
+                        <label>Date limite de livraison (SLA)</label>
+                        <p style="font-size:0.85rem; color:#666; margin-bottom: 0.5rem;">C'est la date max avant que le
+                            transporteur ne subisse la pénalité.</p>
+
+                        <div style="display:flex; gap:0.5rem; margin-bottom: 0.5rem;">
+                            <button type="button" class="btn secondary" onclick="setDeadlineDays(3)"
+                                style="padding:0.4rem; flex:1; font-size: 0.8rem;">+ 3 Jours</button>
+                            <button type="button" class="btn secondary" onclick="setDeadlineDays(7)"
+                                style="padding:0.4rem; flex:1; font-size: 0.8rem;">+ 7 Jours</button>
+                            <button type="button" class="btn secondary" onclick="setDeadlineDays(-3)"
+                                style="padding:0.4rem; flex:1; font-size: 0.8rem; background:#fee2e2; color:#c60000; border-color:#fca5a5;">(Test)
+                                Rétro -3 Jours</button>
+                        </div>
+
+                        <input type="number" id="modalDeadline" required readonly style="background:#eee;">
+                    </div>
+
+                    <button type="submit" class="btn primary submit" id="btnPlaceOrder">Acheter & Séquestrer les
+                        fonds</button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Web3.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="shared.js"></script>
+    <script src="acheteur.js"></script>
+</body>
+
+</html>
