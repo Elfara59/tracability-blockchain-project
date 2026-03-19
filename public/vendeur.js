@@ -190,7 +190,9 @@ function loadMyListings() {
                 <div style="width:40px; height:40px; background:url('${item.photo || 'https://via.placeholder.com/40'}') center/cover; border-radius:4px;"></div>
                 <div>
                     <strong style="color:var(--text-main); font-size:0.9rem;">${item.title}</strong><br>
-                    <span style="font-size:0.8rem; color:var(--primary); font-weight:600;">${item.price} ETH</span>
+                    <span style="font-size:0.8rem; color:var(--primary); font-weight:600;">${item.price} ETH</span><br>
+                    <span style="font-size:0.75rem; color:#666;">Transporteur: <strong>${window.getCarrierName(item.carrier)}</strong></span><br>
+                    <span style="font-size:0.75rem; color:#d32f2f;">SLA (Pénalité): ${item.penalty} ETH</span>
                 </div>
             </div>
             <button class="btn secondary" style="padding:0.4rem 0.8rem; color:var(--error); border-color:var(--error); font-size:0.8rem;" onclick="deleteListing('${item.id}')">Retirer</button>

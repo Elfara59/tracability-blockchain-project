@@ -1,5 +1,5 @@
 // ==== 1. CONFIGURATION CONTRACT ====
-const CONTRACT_ADDRESS = "0x49Eb8A690E9af0cF3cB1cf32ca54cbB705AD7D48";
+const CONTRACT_ADDRESS = "0x4Db4e332b38A4246f44b95645D2efA371d865baF";
 
 const CONTRACT_ABI = [
     {
@@ -284,6 +284,17 @@ let userAccount;
 const STATE_LABELS = ['Créée / Achetée', 'En transit', 'Livrée (Relais)', 'Terminée'];
 const STATE_CLASSES = ['state-created', 'state-shipped', 'state-delivered', 'state-completed'];
 
+window.CARRIERS = {
+    "0xc49a0f4a7c828b96dc41bc44199ec669a4275325": "Mondial Relay",
+    "0x89e7d2979e89f8d5e5463ad829bb3a73a59c3040": "Colissimo"
+};
+
+window.getCarrierName = (address) => {
+    if (!address) return "Inconnu";
+    const name = window.CARRIERS[address.toLowerCase()];
+    return name ? name : `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+};
+
 // ==== 3. UI HELPERS ====
 function showToast(message, type = 'success') {
     let area = document.getElementById('notificationArea');
@@ -411,7 +422,11 @@ function openTxHistoryModal() {
             <div style="padding: 0.8rem; border: 1px solid var(--border); border-radius: 4px; background: #fafafa;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
                     <strong>${tx.actionLabel}</strong>
-                    <span style="font-size:0.8rem; color:#666;">${tx.date}</span>
+                    <div style="font-size:0.9rem;">
+                        <span style="color:#666;">Prix de l'article :</span> ${tx.price} ETH<br>
+                        <span style="color:#666;">SLA (Pénalité Fixe) :</span> ${tx.penaltyPerHour} ETH<br>
+                        <span style="color:#666;">Date Limite SLA :</span> ${tx.deadline}<br>
+                    </div>
                 </div>
                 <div style="font-size:0.75rem; font-family:monospace; color:var(--primary); word-break:break-all;">
                     TX: ${tx.txHash}
@@ -488,7 +503,7 @@ window.generateInvoice = async (orderId) => {
                 <h3 style="margin-top:0; color:#333; font-size: 1.1em; margin-bottom: 20px; text-transform: uppercase;">Membres de L'Échange (Adresses Publiques)</h3>
                 <div class="row"><span class="label">Vendeur (Expéditeur):</span> <span class="value">${order.seller}</span></div>
                 <div class="row"><span class="label">Acheteur (Destinataire):</span> <span class="value">${order.buyer}</span></div>
-                <div class="row" style="margin-bottom:0; border:none;"><span class="label">Transporteur (Tiers):</span> <span class="value">${order.carrier}</span></div>
+                <div class="row" style="margin-bottom:0; border:none;"><span class="label">Transporteur (Tiers):</span> <span class="value">${window.getCarrierName(order.carrier)}<br><span style="font-size:0.8em;color:#999;">${order.carrier}</span></span></div>
             </div>
 
             <div class="box">

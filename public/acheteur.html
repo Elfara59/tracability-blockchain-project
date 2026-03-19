@@ -78,7 +78,10 @@
 
                 <div style="background:#f5f6f7; padding: 1rem; border-radius:4px; margin-bottom: 1.5rem;">
                     <strong id="modalTitle">Article...</strong><br>
-                    <span id="modalPrice" style="color: var(--primary); font-weight:700; font-size:1.2rem;">0 ETH</span>
+                    <span id="modalPrice" style="color: var(--primary); font-weight:700; font-size:1.2rem;">0
+                        ETH</span><br>
+                    <span style="font-size: 0.85rem; color: #666;">Transporteur: <strong
+                            id="modalCarrierName">...</strong></span>
                 </div>
 
                 <form id="confirmBuyForm">
@@ -98,9 +101,9 @@
                                 style="padding:0.4rem; flex:1; font-size: 0.8rem;">+ 3 Jours</button>
                             <button type="button" class="btn secondary" onclick="setDeadlineDays(7)"
                                 style="padding:0.4rem; flex:1; font-size: 0.8rem;">+ 7 Jours</button>
-                            <button type="button" class="btn secondary" onclick="setDeadlineDays(-3)"
-                                style="padding:0.4rem; flex:1; font-size: 0.8rem; background:#fee2e2; color:#c60000; border-color:#fca5a5;">(Test)
-                                Rétro -3 Jours</button>
+                            <button type="button" class="btn secondary" onclick="setDeadlineMinutes(1)"
+                                style="padding:0.4rem; flex:1; font-size: 0.8rem; background:#fee2e2; color:#c60000; border-color:#fca5a5;">(Test
+                                SLA) + 1 Min</button>
                         </div>
 
                         <input type="number" id="modalDeadline" required readonly style="background:#eee;">

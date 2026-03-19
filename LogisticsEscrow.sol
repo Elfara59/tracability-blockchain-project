@@ -89,11 +89,9 @@ contract LogisticsEscrow {
         
         // SLA : Retard par rapport à la deadline fixe
         if (block.timestamp > order.deadline) {
-            uint256 delaySeconds = block.timestamp - order.deadline;
-            uint256 delayHours = delaySeconds / 3600; // 3600 secondes dans une heure
-            penalty = delayHours * order.penaltyPerHour;
+            penalty = order.penaltyPerHour;
             
-            // La pénalité ne peut excéder le prix de la commande
+          //   La pénalité ne peut excéder le prix de la commande
             if (penalty > order.price) {
                 penalty = order.price;
             }

@@ -29,7 +29,7 @@ function loadMarketplace() {
             <div class="item-image" style="background-image: url('${item.photo || 'https://via.placeholder.com/300'}')"></div>
             <div class="item-price">${item.price} ETH</div>
             <div class="item-info" style="color: #111; font-weight: 500; margin-bottom: 0.2rem;">${item.title}</div>
-            <div class="item-info" style="font-size: 0.75rem;">Pénalité: ${item.penalty} ETH/h</div>
+            <div class="item-info" style="font-size: 0.75rem;">Pénalité Fixe (SLA): ${item.penalty} ETH</div>
             <button class="btn secondary" style="width:100%; margin-top:0.8rem; font-size: 0.85rem;" onclick='openBuyModal(${JSON.stringify(item)})'>Sélectionner</button>
         `;
         grid.appendChild(card);
@@ -45,6 +45,7 @@ window.openBuyModal = (item) => {
     // Hidden fields
     document.getElementById('modalSeller').value = item.seller;
     document.getElementById('modalCarrier').value = item.carrier;
+    document.getElementById('modalCarrierName').innerText = window.getCarrierName(item.carrier);
     document.getElementById('modalPenalty').value = item.penalty;
     document.getElementById('modalPriceVal').value = item.price;
     document.getElementById('modalItemId').value = item.id;
@@ -55,6 +56,12 @@ window.openBuyModal = (item) => {
 window.setDeadlineDays = (days) => {
     // Current time + x days in seconds
     const targetTimestamp = Math.floor(Date.now() / 1000) + (days * 24 * 3600);
+    document.getElementById('modalDeadline').value = targetTimestamp;
+};
+
+window.setDeadlineMinutes = (minutes) => {
+    // Current time + x minutes in seconds
+    const targetTimestamp = Math.floor(Date.now() / 1000) + (minutes * 60);
     document.getElementById('modalDeadline').value = targetTimestamp;
 };
 

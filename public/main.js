@@ -1,6 +1,6 @@
 // ==== 1. CONFIGURATION CONTRACT ====
 // Remplacez cette adresse par celle de votre contrat déployé sur Ganache
-const CONTRACT_ADDRESS = "0x49Eb8A690E9af0cF3cB1cf32ca54cbB705AD7D48";
+const CONTRACT_ADDRESS = "0x4Db4e332b38A4246f44b95645D2efA371d865baF";
 
 // L'ABI du contrat complet (Compilé depuis Remix/Solidity)
 const CONTRACT_ABI = [
