@@ -95,7 +95,12 @@ function createOrderCard(id, order, container) {
     } else if (stateInt === 2) { // Delivered => Acheteur
         actionBtn = `<span style="color: var(--primary); font-size: 0.9rem;">Livré, validation acheteur en attente</span>`;
     } else { // Completed
-        actionBtn = `<span style="color: #2e7d32; font-weight: 600;">✔️ Terminée</span>`;
+        actionBtn = `
+            <div style="text-align:right;">
+                <span style="color: #2e7d32; font-weight: 600;">✔️ Terminée</span><br>
+                <button class="btn secondary" style="margin-top:0.5rem; font-size:0.8rem;" onclick="generateInvoice(${id})">🧾 Télécharger Certificat</button>
+            </div>
+        `;
     }
 
     card.innerHTML = `
@@ -122,7 +127,8 @@ window.shipOrder = async (orderId, btnElement) => {
     try {
         btnElement.disabled = true;
         btnElement.innerText = "Signature... 🦊";
-        await contract.methods.shipOrder(orderId).send({ from: userAccount });
+        const receipt = await contract.methods.shipOrder(orderId).send({ from: userAccount });
+        saveTransaction(receipt.transactionHash, "Expédition Commande #" + orderId);
         showToast("Colis noté comme envoyé sur la blockchain !", "success");
         fetchSellerOrders(); // Rafraichir
     } catch (error) {
@@ -151,7 +157,8 @@ document.getElementById('btnWithdraw').addEventListener('click', async (e) => {
     try {
         btn.disabled = true;
         btn.innerText = "Retrait en cours...";
-        await contract.methods.withdraw().send({ from: userAccount });
+        const receipt = await contract.methods.withdraw().send({ from: userAccount });
+        saveTransaction(receipt.transactionHash, "Retrait des fonds (Wallet)");
         showToast('Fonds transférés avec succès !', 'success');
         updatePendingWithdrawals();
     } catch (error) {

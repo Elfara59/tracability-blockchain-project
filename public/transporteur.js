@@ -96,7 +96,9 @@ window.confirmDelivery = async (orderId, btnElement) => {
     try {
         btnElement.disabled = true;
         btnElement.innerText = "Signature... 🦊";
-        await contract.methods.confirmDelivery(orderId).send({ from: userAccount });
+        const receipt = await contract.methods.confirmDelivery(orderId).send({ from: userAccount });
+
+        saveTransaction(receipt.transactionHash, "Validation de Livraison #" + orderId);
 
         // Jouer l'animation de livraison
         playTruckAnimation();

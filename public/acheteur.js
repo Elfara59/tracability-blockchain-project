@@ -47,6 +47,7 @@ window.openBuyModal = (item) => {
     document.getElementById('modalCarrier').value = item.carrier;
     document.getElementById('modalPenalty').value = item.penalty;
     document.getElementById('modalPriceVal').value = item.price;
+    document.getElementById('modalItemId').value = item.id;
 
     setDeadlineDays(7); // default 7 days
 };
@@ -75,15 +76,24 @@ document.getElementById('confirmBuyForm').addEventListener('submit', async (e) =
         btn.disabled = true;
         btn.innerText = "Signature Ethereum...";
 
-        await contract.methods.createOrder(seller, carrier, deadline, penaltyWei).send({
+        const receipt = await contract.methods.createOrder(seller, carrier, deadline, penaltyWei).send({
             from: userAccount,
             value: priceWei // Verrouille l'argent !
         });
+
+        saveTransaction(receipt.transactionHash, "Paiement Séquestré (Achat)");
+
+        // 🟢 NOUVEAUTÉ : On supprime l'article du catalogue une fois acheté
+        const itemId = document.getElementById('modalItemId').value;
+        if (itemId) {
+            removeMarketplaceItem(itemId);
+        }
 
         alert("Achat réussi ! Les fonds sont sécurisés.");
         showToast("Achat réussi ! Les fonds sont sécurisés.", "success");
         document.getElementById('buyModal').style.display = 'none';
 
+        loadMarketplace(); // Rafraichir le catalogue
         fetchBuyerOrders(); // Actualise
     } catch (error) {
         alert("Erreur de transaction : " + error.message);
@@ -148,7 +158,12 @@ function createOrderCard(id, order, container) {
         // C'est ICI que l'Acheteur doit agir !
         actionBtn = `<button class="btn primary" onclick="acceptOrder(${id}, this)">Tout est OK, libérer le paiement</button>`;
     } else { // Completed
-        actionBtn = `<span style="color: #2e7d32; font-weight: 600;">✔️ Réception validée</span>`;
+        actionBtn = `
+            <div style="text-align:right;">
+                <span style="color: #2e7d32; font-weight: 600;">✔️ Réception validée</span><br>
+                <button class="btn secondary" style="margin-top:0.5rem; font-size:0.8rem;" onclick="generateInvoice(${id})">🧾 Télécharger Facture</button>
+            </div>
+        `;
     }
 
     card.innerHTML = `
@@ -175,7 +190,8 @@ window.acceptOrder = async (orderId, btnElement) => {
     try {
         btnElement.disabled = true;
         btnElement.innerText = "Signature... 🦊";
-        await contract.methods.acceptOrder(orderId).send({ from: userAccount });
+        const receipt = await contract.methods.acceptOrder(orderId).send({ from: userAccount });
+        saveTransaction(receipt.transactionHash, "Validation Réception Commande #" + orderId);
         showToast("Commande validée ! L'argent est libéré au vendeur.", "success");
         fetchBuyerOrders();
     } catch (error) {
